@@ -10,11 +10,14 @@
 
 from HTMLParser import HTMLParser
 import urllib
+import os
 
 base_url = 'http://ocw.mit.edu'
 lec_url_list = []
+video_url_list = []
+
 # create a subclass and override the handler methods
-class MyHTMLParser(HTMLParser):
+class lecHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
     	if(tag == 'a'):
     		flag = 0
@@ -26,13 +29,22 @@ class MyHTMLParser(HTMLParser):
             			lec_url_list.append(value)
             			flag = 0
 
-lecLinkParser = MyHTMLParser()
+class vidHTMLParser(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+    	if(tag == 'a'):
+        	for (key,value) in attrs:
+            		if(value[:22] == 'http://www.archive.org' and key == 'href'):	
+            			print "link : ",value
+            			video_url_list.append(value)		
+
+
+lecLinkParser = lecHTMLParser()
 f = urllib.urlopen("sample.html")
 lec_html = f.read()
 lecLinkParser.feed(lec_html)
 lecLinkParser.close()
 
-videoLinkParser = MyHTMLParser()
+videoLinkParser = vidHTMLParser()
 g = urllib.urlopen("video.html")
 vid_html = g.read()
 videoLinkParser.feed(vid_html)
