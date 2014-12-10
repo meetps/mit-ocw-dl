@@ -8,7 +8,7 @@ Download all video lectures from a MIT-OCW course with a single command.
   * Intentionally detailed names, so that it will display and sort properly
     on most interfaces (e.g., MX Video, or VLC on Android devices).
   * URL and lecture name filters to download only video files.
-  * Tested on Linux, and Mac.
+  * Tested on Linux, and Mac (Python 2.7).
 
 ## Instructions
 
