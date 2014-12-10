@@ -1,10 +1,17 @@
 from HTMLParser import HTMLParser
 import urllib
-import os	
+import os
 
 base_url = 'http://ocw.mit.edu'
 lec_url_list = []
 video_url_list = []
+vid_name_list = []
+
+def findName(url):
+	cut_position = url.rfind("/")
+	name = url[cut_position + 1:]
+	return name
+
 
 class lecHTMLParser(HTMLParser):
 	def handle_starttag(self, tag, attrs):
@@ -15,7 +22,10 @@ class lecHTMLParser(HTMLParser):
 					flag =1
 				if(key == 'href' and flag == 1):
 					print "link : ",value
+					lec_name = findName(value)
+					print "Lecture Name :",lec_name
 					lec_url_list.append(value)
+					vid_name_list.append(value)
 					flag = 0
 
 class vidHTMLParser(HTMLParser):
@@ -38,3 +48,19 @@ g = urllib.urlopen("video.html")
 vid_html = g.read()
 videoLinkParser.feed(vid_html)
 videoLinkParser.close()
+
+'''for lec_url in lec_url_list:
+	response = urllib2.urlopen(base_url + lec_url)
+	html = response.read()
+	videoParser = vidHTMLParser()
+	videoParser.feed(html)
+	videoParser.close()
+
+for vid_url in video_url_list:
+	os.system("wget --silent vid_url")'''
+
+i=0
+for duplicate in video_url_list:
+	if(i%2 == 1):
+		video_url_list.remove(duplicate)
+	i = i + 1
