@@ -61,8 +61,8 @@ for duplicate in video_url_list:
 		video_url_list.remove(duplicate)
 	i = i + 1
 
-'''j=0
+j=0
 for vid_url in video_url_list:
 	print "Downloading Lecture " , j+1 , vid_name_list[j]
 	urllib.urlretrieve(vid_url,vid_name_list[j]+".mp4")
-	j = j + 1'''
+	j = j + 1
