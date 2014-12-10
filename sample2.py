@@ -25,7 +25,7 @@ class lecHTMLParser(HTMLParser):
 					lec_name = findName(value)
 					print "Lecture Name :",lec_name
 					lec_url_list.append(value)
-					vid_name_list.append(value)
+					vid_name_list.append(lec_name)
 					flag = 0
 
 class vidHTMLParser(HTMLParser):
@@ -43,24 +43,29 @@ lec_html = f.read()
 lecLinkParser.feed(lec_html)
 lecLinkParser.close()
 
-videoLinkParser = vidHTMLParser()
+'''videoLinkParser = vidHTMLParser()
 g = urllib.urlopen("video.html")
 vid_html = g.read()
 videoLinkParser.feed(vid_html)
-videoLinkParser.close()
+videoLinkParser.close()'''
 
-'''for lec_url in lec_url_list:
-	response = urllib2.urlopen(base_url + lec_url)
+for lec_url in lec_url_list:
+	response = urllib.urlopen(base_url + lec_url)
 	html = response.read()
 	videoParser = vidHTMLParser()
 	videoParser.feed(html)
 	videoParser.close()
-
-for vid_url in video_url_list:
-	os.system("wget --silent vid_url")'''
 
 i=0
 for duplicate in video_url_list:
 	if(i%2 == 1):
 		video_url_list.remove(duplicate)
 	i = i + 1
+
+j=0
+for vid_url in video_url_list:
+	print "Downloading Lecture " , j , vid_name_list[j]
+	urllib.urlretrieve(vid_url,vid_name_list[j]+".mp4")
+	j = j + 1
+
+
