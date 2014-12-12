@@ -7,6 +7,7 @@ base_url = 'http://ocw.mit.edu'
 lec_url_list = []
 video_url_list = []
 vid_name_list = []
+vid_url_list_final = []
 
 def findName(url):
 	cut_position = url.rfind("/")
@@ -39,8 +40,8 @@ class vidHTMLParser(HTMLParser):
 				break
 
 
-print 'Number of arguments:', len(sys.argv), 'arguments.'
-print 'Argument List:', str(sys.argv)
+#print 'Number of arguments:', len(sys.argv), 'arguments.'
+#print 'Argument List:', str(sys.argv)
 
 lecLinkParser = lecHTMLParser()
 f = urllib.urlopen(str(sys.argv[1]))
@@ -57,12 +58,13 @@ for lec_url in lec_url_list:
 
 i=0
 for duplicate in video_url_list:
-	if(i%2 == 1):
-		video_url_list.remove(duplicate)
 	i = i + 1
+	if(i%2 == 1):
+		video_url_list_final.append(duplicate)
+	
 
 j=0
-for vid_url in video_url_list:
+for vid_url in video_url_list_final:
 	print "Downloading Lecture " , j+1 , vid_name_list[j]
 	urllib.urlretrieve(vid_url,vid_name_list[j]+".mp4")
 	j = j + 1
