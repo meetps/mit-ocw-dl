@@ -7,7 +7,7 @@ base_url = 'http://ocw.mit.edu'
 lec_url_list = []
 video_url_list = []
 vid_name_list = []
-vid_url_list_final = []
+video_url_list_final = []
 
 def findName(url):
 	cut_position = url.rfind("/")
