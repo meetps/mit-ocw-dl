@@ -1,7 +1,7 @@
 import sys
-import urllib
+import urllib.request
 import os
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 
 base_url = 'http://ocw.mit.edu'
 lec_url_list = []
@@ -24,9 +24,9 @@ class lecHTMLParser(HTMLParser):
                 if value == 'bullet medialink' and key == 'class':
                     flag = 1
                 if key == 'href' and flag == 1:
-                    print "link : ", value
+                    print("link : ", value)
                     lec_name = findName(value)
-                    print "Lecture Name :", lec_name
+                    print("Lecture Name :", lec_name)
                     lec_url_list.append(value)
                     vid_name_list.append(lec_name)
                     flag = 0
@@ -37,7 +37,7 @@ class vidHTMLParser(HTMLParser):
         if tag == 'a':
             for (key, value) in attrs:
                 if value[:22] == 'http://www.archive.org' and key == 'href':
-                    print "link : ", value
+                    print("link : ", value)
                     video_url_list.append(value)
                 break
 
@@ -46,16 +46,16 @@ class vidHTMLParser(HTMLParser):
 # print 'Argument List:', str(sys.argv)
 
 lecLinkParser = lecHTMLParser()
-f = urllib.urlopen(str(sys.argv[1]))
+f = urllib.request.urlopen(str(sys.argv[1]))
 lec_html = f.read()
-lecLinkParser.feed(lec_html)
+lecLinkParser.feed(str(lec_html))
 lecLinkParser.close()
 
 for lec_url in lec_url_list:
-    response = urllib.urlopen(base_url + lec_url)
+    response = urllib.request.urlopen(base_url + lec_url)
     html = response.read()
     videoParser = vidHTMLParser()
-    videoParser.feed(html)
+    videoParser.feed(str(html))
     videoParser.close()
 
 i = 0
@@ -66,6 +66,6 @@ for duplicate in video_url_list:
 
 j = 0
 for vid_url in video_url_list_final:
-    print "Downloading Lecture ", j + 1, vid_name_list[j]
-    urllib.urlretrieve(vid_url, vid_name_list[j] + ".mp4")
+    print("Downloading Lecture ", j + 1, vid_name_list[j])
+    urllib.request.urlretrieve(vid_url, vid_name_list[j] + ".mp4")
     j = j + 1
