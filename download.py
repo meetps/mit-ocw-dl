@@ -24,10 +24,11 @@ class lecHTMLParser(HTMLParser):
 				if(value == 'bullet medialink' and key == 'class'):
 					flag =1
 				if(key == 'href' and flag == 1):
-					print "link : ",value
+					print "Lecture Link : ",value
 					lec_name = findName(value)
 					print "Lecture Name :",lec_name
 					lec_url_list.append(value)
+					lec_name = "{:02.0f}_" + lec_name
 					vid_name_list.append(lec_name)
 					flag = 0
 
