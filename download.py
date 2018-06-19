@@ -2,6 +2,7 @@ import sys
 import urllib
 import os
 from HTMLParser import HTMLParser
+import time
 
 base_url = 'http://ocw.mit.edu'
 lec_url_list = []
@@ -40,6 +41,32 @@ class vidHTMLParser(HTMLParser):
 				break
 
 
+def progress(count, block_size, total_size):
+	global start_time
+	global time_array
+	global skip
+	if count == 0:
+		skip = 100
+		time_array = [0]*skip
+		start_time = time.time()
+		return
+	duration = time.time()-start_time
+	progress_size = int( count * block_size)
+	speed = int(progress_size/(1024*duration))
+	time_left = int(( total_size - (count * block_size ))/(speed*1024))
+	time_array[count % skip ] = time_left
+	time_left = 0
+	if count % skip:
+		return
+	for t in time_array:
+		time_left = time_left + t
+	time_left = int(time_left / skip)
+	percent = int(count * block_size * 100/total_size)
+
+	sys.stdout.write ("\r ...%d%%, %d MB, %d KB/s, %d seconds   " %
+	(percent, progress_size / (1024*1024), speed, time_left))
+	sys.stdout.flush()
+
 #print 'Number of arguments:', len(sys.argv), 'arguments.'
 #print 'Argument List:', str(sys.argv)
 
@@ -66,5 +93,6 @@ for duplicate in video_url_list:
 j=0
 for vid_url in video_url_list_final:
 	print "Downloading Lecture " , j+1 , vid_name_list[j]
-	urllib.urlretrieve(vid_url,vid_name_list[j]+".mp4")
+	urllib.urlretrieve(vid_url,vid_name_list[j]+".mp4", progress)
 	j = j + 1
+print "Done."
