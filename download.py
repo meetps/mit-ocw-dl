@@ -9,7 +9,6 @@ base_url = 'http://ocw.mit.edu'
 lec_url_list = []
 video_url_list = []
 vid_name_list = []
-video_url_list_final = []
 
 def findName(url):
 	cut_position = url.rfind("/")
@@ -36,9 +35,14 @@ class vidHTMLParser(HTMLParser):
 	def handle_starttag(self, tag, attrs):
 		if(tag == 'a'):
 			for (key,value) in attrs:
-				if(value[:22] == 'http://www.archive.org' and key == 'href'):
-					print "link : ",value
-					video_url_list.append(value)
+				if( key == 'href' and ( value[:22] == 'http://www.archive.org' or value[:19] == 'https://archive.org') and value.endswith( "mp4" ) ):
+					try:
+						if value != video_url_list[-1] :
+							print "Video Link : ",value
+							video_url_list.append(value)
+						return
+					except IndexError:
+						video_url_list.append(value) # expected on first round
 				break
 
 
@@ -84,16 +88,10 @@ for lec_url in lec_url_list:
 	videoParser.feed(html)
 	videoParser.close()
 
-i=0
-for duplicate in video_url_list:
-	i = i + 1
-	if(i%2 == 1):
-		video_url_list_final.append(duplicate)
-	
 j=0
-for vid_url in video_url_list_final:
+for vid_url in video_url_list:
 	filename = Path( vid_name_list[j].format(j+1) + ".mp4" )
-	print "Downloading {:02d} of {:02d}: ".format(j+1,len(video_url_list_final)) + filename.name
+	print "Downloading {:02d} of {:02d}: ".format(j+1,len(video_url_list)) + filename.name
 	if filename.exists():
 		print "Already Downloaded: " + filename.name
 	else :
