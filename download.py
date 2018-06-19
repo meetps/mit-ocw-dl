@@ -76,6 +76,10 @@ def progress(count, block_size, total_size):
 #print 'Number of arguments:', len(sys.argv), 'arguments.'
 #print 'Argument List:', str(sys.argv)
 
+if( len(sys.argv) < 2 ):
+	print "Must pass a URL"
+	print "i.e. python download.py http://ocw.mit.edu/cources/college/course-title/video-lectures/"
+	exit()
 lecLinkParser = lecHTMLParser()
 f = urllib.urlopen(str(sys.argv[1]))
 lec_html = f.read()
