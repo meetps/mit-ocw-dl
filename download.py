@@ -2,6 +2,7 @@ import sys
 import urllib
 import os
 from HTMLParser import HTMLParser
+from pathlib import Path
 import time
 
 base_url = 'http://ocw.mit.edu'
@@ -89,10 +90,13 @@ for duplicate in video_url_list:
 	if(i%2 == 1):
 		video_url_list_final.append(duplicate)
 	
-
 j=0
 for vid_url in video_url_list_final:
-	print "Downloading Lecture " , j+1 , vid_name_list[j]
-	urllib.urlretrieve(vid_url,vid_name_list[j]+".mp4", progress)
+	filename = Path( vid_name_list[j].format(j+1) + ".mp4" )
+	print "Downloading {:02d} of {:02d}: ".format(j+1,len(video_url_list_final)) + filename.name
+	if filename.exists():
+		print "Already Downloaded: " + filename.name
+	else :
+		urllib.urlretrieve(vid_url, filename.name, progress)
 	j = j + 1
 print "Done."
