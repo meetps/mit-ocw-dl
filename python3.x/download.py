@@ -5,6 +5,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 import time
 import multiprocessing
+from multiprocessing import freeze_support
 
 base_url = 'http://ocw.mit.edu'
 lec_url_list = []
@@ -76,6 +77,12 @@ def download_video(vid_args):
 	else :
 		urllib.request.urlretrieve(vid_url, filename.name)
 
-pool = multiprocessing.Pool(processes=10) #use 10 processes for fast downloading, IO takes time 
-output = pool.map(download_video,zip(video_url_list,vid_name_list,list(range(1,len(video_url_list)+1)))) 
-print ("Done.") 
+def main():		
+	freeze_support()
+	pool = multiprocessing.Pool(processes=10) #use 10 processes for fast downloading, IO takes time 
+	output = pool.map(download_video,zip(video_url_list,vid_name_list,list(range(1,len(video_url_list)+1)))) 
+	print ("Done.") 
+
+if __name__ == "__main__":
+    main()
+	
